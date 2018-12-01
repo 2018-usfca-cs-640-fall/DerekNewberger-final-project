@@ -59,7 +59,7 @@ load("output/phyloseq_obj.Rdata")
 # something like load("output/processed_data.Rdata")
 ```
 
-```{r First figure}
+```{r abundancies-across-the-three-types-of-land-use}
 phyloseq_obj_abundancies <- subset_samples(phyloseq_obj, # a new phyloseq object
                                   current_land_use == "grassland" |
                                     current_land_use == "till cropland" |
@@ -68,6 +68,50 @@ plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
           title = "Sequence abundance of current land use")
 
 ```
+
+```{r Failure-figure}
+phyloseq_obj_abundancies_filtered <- subset_samples(phyloseq_obj, # new object
+                                    current_land_use == "grassland" |
+                                    current_land_use == "till cropland" |
+                                    current_land_use == "no till cropland")
+
+phyloseq_table <- psmelt(phyloseq_obj_abundancies_filtered) %>%
+filter(Abundance >= 600)
+plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
+          title = "Sequence abundance of current land use")
+
+```
+
+
+```{r Failure-attempt-2}
+phyloseq_table <- psmelt(phyloseq_obj)
+phyloseq_obj_abundancies_filtered <- phyloseq_table %>%
+  exclusion(Abundance == 17343, 12164, 10889) %>%
+  #download crunch package?
+  group_by(current_land_use) %>%
+  summarize(sumAbundance = sum(Abundance))
+
+phyloseq_obj_abundancies_filtered <- subset_samples(phyloseq_obj,
+          current_land_use == "grassland" |
+      current_land_use == "till cropland" |
+      current_land_use == "no till cropland")
+plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
+          title = "Sequence abundance of current land use")
+
+```
+
+
+```{r Shannon-error}
+plot_richness(phyloseq_obj,
+               x = "current_land_use",
+               measures = c("Shannon", "Simpson"), title = "Shannon and Simpson index for current land use") +
+   geom_jitter(width = 0.2) +
+   theme_bw()
+```
+
+```{r Genus-an-stuff}
+```
+
 In addition to a minimum of 5-8 figures/tables (and associated captions), you should include sufficient text in this section to describe what your findings were. Remember that in the results section you just describe what you found, but you don't interpret it - that happens in the discussion. 2-3 pages.
 
 # Discussion
