@@ -43,14 +43,31 @@ These are the methods you used to do your bioinformatic analyses analyses. Shoul
 # unclear.
 ```
 
-```{r load-packages-and-data}
-# load packages as needed
+```{r load-packages-and-data, message = FALSE}
+# load general-use and special packages
 library("dplyr")
-
+library("tidyr")
+library("knitr")
+library("ggplot2")
+library("citr")
+library("dada2")
+library("seqinr")
+library("mctoolsr")
+library("phyloseq")
+load("output/phyloseq_obj.Rdata")
 # load data produced from analysis scripts using
 # something like load("output/processed_data.Rdata")
 ```
 
+```{r First figure}
+phyloseq_obj_abundancies <- subset_samples(phyloseq_obj, # a new phyloseq object
+                                  current_land_use == "grassland" |
+                                    current_land_use == "till cropland" |
+                                    current_land_use == "no till cropland")
+plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
+          title = "Sequence abundance of current land use")
+
+```
 In addition to a minimum of 5-8 figures/tables (and associated captions), you should include sufficient text in this section to describe what your findings were. Remember that in the results section you just describe what you found, but you don't interpret it - that happens in the discussion. 2-3 pages.
 
 # Discussion
