@@ -69,49 +69,49 @@ plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
 
 ```
 
-```{r Failure-figure}
-phyloseq_obj_abundancies_filtered <- subset_samples(phyloseq_obj, # new object
+```{r sequence-abundance-filtered}
+phyloseq_obj_abundances_filtered <- subset_samples(phyloseq_obj, # new object
                                     current_land_use == "grassland" |
                                     current_land_use == "till cropland" |
                                     current_land_use == "no till cropland")
 
-phyloseq_table <- psmelt(phyloseq_obj_abundancies_filtered) %>%
-filter(Abundance >= 600)
-plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
-          title = "Sequence abundance of current land use")
+phyloseq_table <- psmelt(phyloseq_obj_abundances_filtered) %>%
+filter(Abundance < 600)
+ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) + geom_col() + ggtitle("Sequence abundance of current land use")
 
 ```
 
-
-```{r Failure-attempt-2}
-phyloseq_table <- psmelt(phyloseq_obj)
-phyloseq_obj_abundancies_filtered <- phyloseq_table %>%
-  exclusion(Abundance == 17343, 12164, 10889) %>%
-  #download crunch package?
-  group_by(current_land_use) %>%
-  summarize(sumAbundance = sum(Abundance))
-
-phyloseq_obj_abundancies_filtered <- subset_samples(phyloseq_obj,
-          current_land_use == "grassland" |
-      current_land_use == "till cropland" |
-      current_land_use == "no till cropland")
-plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
-          title = "Sequence abundance of current land use")
-
-```
-
-
-```{r Shannon-error}
+```{r Shannon-bw}
 plot_richness(phyloseq_obj,
                x = "current_land_use",
-               measures = c("Shannon", "Simpson"), title = "Shannon and Simpson index for current land use") +
+               measures = c("Shannon", "Simpson"), 
+              title = "Shannon and Simpson index for current land use") +
    geom_jitter(width = 0.2) +
    theme_bw()
 ```
 
-```{r Genus-an-stuff}
+```{r Shannon-color}
+plot_richness(phyloseq_obj,
+               x = "current_land_use",
+               measures = c("Shannon", "Simpson"),
+              color = ("Library_Name"),
+title = ("Shannon and Simpson index for current land use")) +
+   geom_jitter(width = 0.2)
 ```
 
+# top-10 Families
+prevdf2 <- subset(prevdf, Prevalence >= 20)
+ggplot(prevdf2, (aes(x = Order,
+                     y = Prevalence,
+                     color = Phylum,
+                     fill = Family))) +
+  geom_col() +
+  xlab("Order") +
+  ylab("Prevalence") +
+  ggtitle("Top 10 Family of bacteria most prevalent in samples") +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
 In addition to a minimum of 5-8 figures/tables (and associated captions), you should include sufficient text in this section to describe what your findings were. Remember that in the results section you just describe what you found, but you don't interpret it - that happens in the discussion. 2-3 pages.
 
 # Discussion
