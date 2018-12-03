@@ -85,7 +85,7 @@ plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
 
 ```
 
-```{r sequence abundance labeled}
+```{r abundance-genus-labeled}
 plot_bar(phyloseq_obj, x = "current_land_use", fill = "Genus") +
   theme(legend.position = "none")
 ```
@@ -105,7 +105,7 @@ xlab("Current land use")
 
 
 
-```{r Shannon-bw}
+```{r shannon-bw}
 plot_richness(phyloseq_obj,
                x = "current_land_use",
                measures = c("Shannon", "Simpson"),
@@ -114,7 +114,7 @@ plot_richness(phyloseq_obj,
    theme_bw()
 ```
 
-```{r Shannon-color}
+```{r shannon-simpson-color}
 plot_richness(phyloseq_obj,
                x = "current_land_use",
                measures = c("Shannon", "Simpson"),
@@ -131,27 +131,27 @@ title = ("Shannon and Simpson index for current land use")) +
    geom_jitter(width = 0.2)
 ```
 
-```{r Order}
+```{r abundance-per-sample-by-kingdom}
 plot_bar(phyloseq_obj, fill = "Kingdom") +
-  ggtitle("Distribution of abundant Kingdom in each sample") +
+  ggtitle("Abundance of sequences per sample by Kingdom") +
   theme(legend.position = "bottom")
 ```
 
-```{r Order}
+```{r abundance-per-sample-by-phylum}
 plot_bar(phyloseq_obj, fill = "Phylum") +
-  ggtitle("Distribution of abundant Phylum in each sample") +
+  ggtitle("Abundance of sequences per sample by Phylum") +
   theme(legend.position = "bottom")
 ```
 
-```{r Order}
+```{r abundance-per-sample-by-class}
 plot_bar(phyloseq_obj, fill = "Class") +
-  ggtitle("Distribution of abundant Class in each sample") +
+  ggtitle("Abundance of sequences per sample by Class") +
   theme(legend.position = "bottom")
 ```
 
-```{r Order}
+```{r abundance-per-sample-by-order}
 plot_bar(phyloseq_obj, fill = "Order") +
-  ggtitle("Distribution of abundant Order in each sample")
+  ggtitle("Abundance of sequences per sample by Order")
 ```
 
 ```{r genus-frequency-table}
