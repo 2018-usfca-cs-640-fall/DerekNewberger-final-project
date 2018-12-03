@@ -16,6 +16,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Add about 2-3 pages here. Across the whole manuscript, you should cite at least 20 peer reviewed articles.
 
+Relevant abiotic factors in this study include characteristics of soil and chemistry of the organic compound within it. The study placed sample weights into three main categories, macroaggregates (250-2,000 μm and 63-250 μm), microaggregates (20-63μm and 2-20 μm), and clay particles (2 μm). In its broadest sense, a macroaggregates are simply relatively large particles. Similar studies have described macroaggregates as 250-2,000 μm clumps which form from fresh residues since it is a carbon source for microbes and encourages the production of micro-derived binding agents. Microaggregates are formed within the much larger macroaggregates and typically maintains stability even if the macroaggregate it is inside, breaks apart. Bothof these structures influence the C-N availability [@six2000soil]. The study defined clay particles as particles, lower than 2 μm, which is in line with most estimates and although not explicitly defined, the silty-clay particles can be defined as soil particles that are intermixed with paticles between 2-50  μm [@six2000soil:1]. 
+
 # Methods
 
 ## Study design of Constancias et al. 2014
@@ -152,6 +154,11 @@ plot_bar(phyloseq_obj, fill = "Order") +
   ggtitle("Distribution of abundant Order in each sample")
 ```
 
+```{r genus-frequency-table}
+table(tax_table(taxa)[, "Genus", exclude = NA]) %>%
+  kable(col.names = c("Genus", "Frequency"))
+```
+
 ```{r order-frequency-table}
 table(tax_table(taxa)[, "Order"], exclude = NULL) %>%
 kable(col.names = c("Order",
@@ -170,10 +177,6 @@ kable(col.names = c("Phylum",
                     "Frequency"))
 ```
 
-```{r genus-frequency-table}
-table(tax_table(taxa)[, "Genus", exclude = NA]) %>%
-  kable(col.names = c("Genus", "Frequency"))
-```
 
 ```{r kingdom-frequency-table}
 table(tax_table(taxa)[, "Kingdom", exclude = NA]) %>%
