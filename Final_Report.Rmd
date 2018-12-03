@@ -18,13 +18,26 @@ Add about 2-3 pages here. Across the whole manuscript, you should cite at least 
 
 # Methods
 
-## Study design
+## Study design of Constancias et al. 2014
 
-Add about half a page here. In this section instead of first person (I/we), use the authors of the paper you selected, since you'll just be describing what they did, based on the methods in their paper.
+### Field soil sampling:
 
-## Sample origin and sequencing
+During springtime in Burgundy, France in the agricultural landscape of Fénay, soils were sampled from three plots of soil characterized by silty clay calcisol. The agricultural practices on the grassland plot, the tilled plot, and the stubble ploughed plot, of the past eight years were monitored. Each plot had minor differences in their parameters. For sampling, a geological reference point of one meter was used and soil cores were from the surface horizon (0-20 cm) and pooled. After being sieved (2mm), the samples were air dried, and then stored at 4 C until the fraction procedure.
 
-Add about half a page here. In this section instead of first person (I/we), use the authors of the paper you selected, since you'll just be describing what they did, based on the methods in their paper.
+### Soil fractionation procedure:
+
+They used a gentle physical soil fraction method (Chotte et al. 2002), to isolate the soil microenvironments by size. A subsample of 50 g of 2-mm was shaken in 250 mL of Milli-Q water for 3 h. Using the two sieves (250- and 63-μm) particles and water-stable aggregates were separated by wet sieving in approximately 3 cm of water 60 times during 2 min.  The 2,000–250- and 250–63-μm fractions were macroaggregates associated to coarse and fine sands, respectively. Stoke’s law was used to separate the microaggregates with particles of silt and loam by sedimentation and siphoning. Water was removed as clay fractions of <2 μm were recovered by centrifuging at 11,000g, 4 °C for 20 min. Samples were then freeze-dried. This procedure was carried out in replicates. Replicates were lyophilized and stored at −40 °C, and the three subsamples were used for physicochemical and microbiological analysis.
+
+### Soil physicochemical analysis
+
+The lyophilized fractions were weighed, organic carbon and total nitrogen contents of samples were characterized according to NF ISO 10694 and 13878.  Soil texture of bulk soils was determined according to NF X 31–107. Size distribution of the particles and aggregates of each fraction was verified by laser granulometry (Mastersizer 2000, Malvern Ltd). Using adhesive graphite tabs, aluminum stubs gold-palladium (12–15 nm thick), Polaron SC 7620 Mini Sputter Coater, samples were observed with a Philips XL-30ESEM LaB6 scanning electron microscope at 14 kV. 
+
+
+## Sample origin and sequencing of Constancias et al. 2014
+
+### Soil DNA extraction, pyrosequencing, and data analysis 
+
+Using the GnsGII procedure (Plassart et al. 2012), soil microbial DNA was extracted and purified from soil samples. Bacterial density was estimated by real-time quantitative PCR of 16S rRNA gene which were then amplified with 341F and 515R primers on 1 ng of template DNA and using the Veriti® Thermal Cycler. Using 454-pyrosequencing of the 16S rRNAV3–V4 gene region (Terrat et al. 2012). The first PCR used primers F479 and R888, while the second used purified PCR products from the first one. Ten base-pair multiplex identifiers (MID) were added to the primers at 5′ position. Pyrosequencing was then carried out on a GS Junior And the data were processed using the GnS-PIPE of the GenoSol platform (Terrat et al. 2012). Raw sequences were discarded if they had ambiguous base calls, length less than 350 nt, or if they contained any ambiguity (Ns). Using infernal alignments that use secondary structure of 16S rRNA gene Sequences, sequences that clustered at 95 % sequence similarity into operational taxonomic units (OTU) were identified. A filter for potential sources (chimeras, sequencing errors, OTU overestimation) of errors was applied. To compare the datasets, quality sample reads were reduced by random selection to the lowest dataset, i.e., 2,060 randomly quality-selected sequences per sample. High-quality reads were used for taxonomy-based analysis using USEARCH against reference databases from the Silva (Quast et al. 2013), with sequences longer than 500 nucleotides. Using UniFrac we compared the sampled bacterial communities (Lozupone and Knight 2005).  UniFrac community analyses were based on a phylogenetic tree computed with FastTree using the most abundant read to represent each OTU. A weighted UniFrac distance measure was then realized to compute a dendrogram by using the PycoGent package (Knight et al. 2007). I found the raw data sets On NCBI with EBI database system tags using project accession number PRJEB4553.Differences between physicochemical characteristics, density, and diversity in bacterial communities were tested by ANOVA, multiple paired comparisons with P <0.05. Using the heatmap.2 function the heatmap figure was built and the gplots R package was used for the relative abundance values of the most dominant bacterial genus across the samples. The mean of each taxonomic group across sample types was calculated and colored by a corresponding Z score.
 
 ## Computational
 
@@ -65,26 +78,35 @@ phyloseq_obj_abundancies <- subset_samples(phyloseq_obj, # a new phyloseq object
                                     current_land_use == "till cropland" |
                                     current_land_use == "no till cropland")
 plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
-          title = "Sequence abundance of current land use")
+          title = "Sequence abundance of current land use") +
+  xlab("Current land use")
 
 ```
 
+```{r sequence abundance labeled}
+plot_bar(phyloseq_obj, x = "current_land_use", fill = "Genus") +
+  theme(legend.position = "none")
+```
+
 ```{r sequence-abundance-filtered}
-phyloseq_obj_abundances_filtered <- subset_samples(phyloseq_obj, # new object
+phyloseq_abundances_f <- subset_samples(phyloseq_obj, # new object
                                     current_land_use == "grassland" |
                                     current_land_use == "till cropland" |
                                     current_land_use == "no till cropland")
 
-phyloseq_table <- psmelt(phyloseq_obj_abundances_filtered) %>%
+phyloseq_table <- psmelt(phyloseq_abundances_f) %>%
 filter(Abundance < 600)
-ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) + geom_col() + ggtitle("Sequence abundance of current land use")
-
+ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) +
+  geom_col() + ggtitle("Sequence abundance of current land use") +
+xlab("Current land use")
 ```
+
+
 
 ```{r Shannon-bw}
 plot_richness(phyloseq_obj,
                x = "current_land_use",
-               measures = c("Shannon", "Simpson"), 
+               measures = c("Shannon", "Simpson"),
               title = "Shannon and Simpson index for current land use") +
    geom_jitter(width = 0.2) +
    theme_bw()
@@ -98,19 +120,86 @@ plot_richness(phyloseq_obj,
 title = ("Shannon and Simpson index for current land use")) +
    geom_jitter(width = 0.2)
 ```
+```{r Shannon-color}
+plot_richness(phyloseq_obj,
+               x = "current_land_use",
+               measures = c("Shannon"),
+              color = ("Library_Name"),
+title = ("Shannon and Simpson index for current land use")) +
+   geom_jitter(width = 0.2)
+```
 
-# top-10 Families
-prevdf2 <- subset(prevdf, Prevalence >= 20)
-ggplot(prevdf2, (aes(x = Order,
-                     y = Prevalence,
-                     color = Phylum,
-                     fill = Family))) +
+```{r Order}
+plot_bar(phyloseq_obj, fill = "Kingdom") +
+  ggtitle("Distribution of abundant Kingdom in each sample") +
+  theme(legend.position = "bottom")
+```
+
+```{r Order}
+plot_bar(phyloseq_obj, fill = "Phylum") +
+  ggtitle("Distribution of abundant Phylum in each sample") +
+  theme(legend.position = "bottom")
+```
+
+```{r Order}
+plot_bar(phyloseq_obj, fill = "Class") +
+  ggtitle("Distribution of abundant Class in each sample") +
+  theme(legend.position = "bottom")
+```
+
+```{r Order}
+plot_bar(phyloseq_obj, fill = "Order") +
+  ggtitle("Distribution of abundant Order in each sample")
+```
+
+```{r order-frequency-table}
+table(tax_table(taxa)[, "Order"], exclude = NULL) %>%
+kable(col.names = c("Order",
+                    "Frequency"))
+```
+
+```{r class-frequency-table}
+table(tax_table(taxa)[, "Class", exclude = NA]) %>%
+kable(col.names = c("Class",
+                    "Frequency"))
+```
+
+```{r phylum-frequency-table}
+table(tax_table(taxa)[, "Phylum", exclude = NA]) %>%
+kable(col.names = c("Phylum",
+                    "Frequency"))
+```
+
+```{r genus-frequency-table}
+table(tax_table(taxa)[, "Genus", exclude = NA]) %>%
+  kable(col.names = c("Genus", "Frequency"))
+```
+
+```{r kingdom-frequency-table}
+table(tax_table(taxa)[, "Kingdom", exclude = NA]) %>%
+kable(col.names = c("Kingdom",
+                    "Frequency"))
+```
+
+```{r testing}
+plot_bar(phyloseq_obj,
+         x = "current_land_use",
+         fill = "Genus") +
+  geom_bar(aes(color = Genus,
+               fill = Genus),
+           stat = "identity",
+           position = "stack") +
+  theme(legend.position = "none")
+```
+
+```{r ph}
+by_ph_current_land_use <- melted_phyloseq %>%
+  group_by(current_land_use, pH) %>%
+summarize(meanpH = mean(sumpH))
+ggplot(by_pH_current_land_use, aes(x = current_land_use,
+         y = meanSumpH)) +
   geom_col() +
-  xlab("Order") +
-  ylab("Prevalence") +
-  ggtitle("Top 10 Family of bacteria most prevalent in samples") +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
+ ggtitle("Comparing mean pH of samples by current land use")
 ```
 In addition to a minimum of 5-8 figures/tables (and associated captions), you should include sufficient text in this section to describe what your findings were. Remember that in the results section you just describe what you found, but you don't interpret it - that happens in the discussion. 2-3 pages.
 
