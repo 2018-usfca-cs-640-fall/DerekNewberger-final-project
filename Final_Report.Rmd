@@ -85,17 +85,11 @@ plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
 
 ```
 
-```{r abundance-genus-labeled}
-plot_bar(phyloseq_obj, x = "current_land_use", fill = "Genus") +
-  theme(legend.position = "none")
-```
-
 ```{r sequence-abundance-filtered}
 phyloseq_abundances_f <- subset_samples(phyloseq_obj, # new object
                                     current_land_use == "grassland" |
                                     current_land_use == "till cropland" |
                                     current_land_use == "no till cropland")
-
 phyloseq_table <- psmelt(phyloseq_abundances_f) %>%
 filter(Abundance < 600)
 ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) +
@@ -103,25 +97,6 @@ ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) +
 xlab("Current land use")
 ```
 
-
-
-```{r shannon-bw}
-plot_richness(phyloseq_obj,
-               x = "current_land_use",
-               measures = c("Shannon", "Simpson"),
-              title = "Shannon and Simpson index for current land use") +
-   geom_jitter(width = 0.2) +
-   theme_bw()
-```
-
-```{r shannon-simpson-color}
-plot_richness(phyloseq_obj,
-               x = "current_land_use",
-               measures = c("Shannon", "Simpson"),
-              color = ("Library_Name"),
-title = ("Shannon and Simpson index for current land use")) +
-   geom_jitter(width = 0.2)
-```
 ```{r Shannon-color}
 plot_richness(phyloseq_obj,
                x = "current_land_use",
@@ -131,60 +106,115 @@ title = ("Shannon and Simpson index for current land use")) +
    geom_jitter(width = 0.2)
 ```
 
+```{r shannon-chao1-color}
+plot_richness(phyloseq_obj,
+               x = "current_land_use",
+               measures = c("Shannon", "Chao1"),
+              color = "Library_Name",
+              title = "Shannon and Simpson index for current land use")
+```
+
+
 ```{r abundance-per-sample-by-kingdom}
 plot_bar(phyloseq_obj, fill = "Kingdom") +
+  geom_bar(aes(color = Kingdom,
+               fill = Kingdom),
+           stat = "identity",
+           position = "stack") +
   ggtitle("Abundance of sequences per sample by Kingdom") +
   theme(legend.position = "bottom")
 ```
 
+```{r kingdom-frequency-table}
+as.data.frame(tax_table(phyloseq_obj)) %>%
+group_by(Kingdom) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  head(3) %>%
+  kable(col.names = c("Kingdom",
+                    "Frequency"))
+```
+
 ```{r abundance-per-sample-by-phylum}
 plot_bar(phyloseq_obj, fill = "Phylum") +
+    geom_bar(aes(color = Phylum,
+               fill = Phylum),
+           stat = "identity",
+           position = "stack") +
   ggtitle("Abundance of sequences per sample by Phylum") +
   theme(legend.position = "bottom")
 ```
 
+```{r phylum-frequency-table}
+as.data.frame(tax_table(phyloseq_obj)) %>%
+group_by(Phylum) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  head(10) %>%
+  kable(col.names = c("Phylum",
+                    "Frequency"))
+```
+
 ```{r abundance-per-sample-by-class}
 plot_bar(phyloseq_obj, fill = "Class") +
+  geom_bar(aes(color = Class,
+               fill = Class),
+           stat = "identity",
+           position = "stack") +
   ggtitle("Abundance of sequences per sample by Class") +
   theme(legend.position = "bottom")
 ```
 
+```{r class-frequency-table}
+as.data.frame(tax_table(phyloseq_obj)) %>%
+group_by(Class) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  head(10) %>%
+  kable(col.names = c("Class",
+                    "Frequency"))
+```
+
 ```{r abundance-per-sample-by-order}
 plot_bar(phyloseq_obj, fill = "Order") +
+  geom_bar(aes(color = Order,
+               fill = Order),
+           stat = "identity",
+           position = "stack") +
+  theme(legend.position = "none")
   ggtitle("Abundance of sequences per sample by Order")
 ```
 
+```{r order-frequency-table}
+as.data.frame(tax_table(phyloseq_obj)) %>%
+group_by(Order) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  head(10) %>%
+  kable(col.names = c("Order",
+                    "Frequency"))
+```
+
+```{r abundance-per-sample-by-genus}
+plot_bar(phyloseq_obj, fill = "Genus") +
+  geom_bar(aes(color = Genus,
+               fill = Genus),
+           stat = "identity",
+           position = "stack") +
+   theme(legend.position = "none")
+  ggtitle("Abundance of sequences per sample by Genus")
+```
+
 ```{r genus-frequency-table}
-table(tax_table(taxa)[, "Genus", exclude = NA]) %>%
+as.data.frame(tax_table(phyloseq_obj)) %>%
+  group_by(Genus) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  head(31) %>%
   kable(col.names = c("Genus", "Frequency"))
 ```
 
-```{r order-frequency-table}
-table(tax_table(taxa)[, "Order"], exclude = NULL) %>%
-kable(col.names = c("Order",
-                    "Frequency"))
-```
-
-```{r class-frequency-table}
-table(tax_table(taxa)[, "Class", exclude = NA]) %>%
-kable(col.names = c("Class",
-                    "Frequency"))
-```
-
-```{r phylum-frequency-table}
-table(tax_table(taxa)[, "Phylum", exclude = NA]) %>%
-kable(col.names = c("Phylum",
-                    "Frequency"))
-```
-
-
-```{r kingdom-frequency-table}
-table(tax_table(taxa)[, "Kingdom", exclude = NA]) %>%
-kable(col.names = c("Kingdom",
-                    "Frequency"))
-```
-
-```{r testing}
+```{r abundance-land-use-genus}
 plot_bar(phyloseq_obj,
          x = "current_land_use",
          fill = "Genus") +
@@ -192,18 +222,9 @@ plot_bar(phyloseq_obj,
                fill = Genus),
            stat = "identity",
            position = "stack") +
-  theme(legend.position = "none")
+  theme(legend.position = "bottom")
 ```
 
-```{r ph}
-by_ph_current_land_use <- melted_phyloseq %>%
-  group_by(current_land_use, pH) %>%
-summarize(meanpH = mean(sumpH))
-ggplot(by_pH_current_land_use, aes(x = current_land_use,
-         y = meanSumpH)) +
-  geom_col() +
- ggtitle("Comparing mean pH of samples by current land use")
-```
 In addition to a minimum of 5-8 figures/tables (and associated captions), you should include sufficient text in this section to describe what your findings were. Remember that in the results section you just describe what you found, but you don't interpret it - that happens in the discussion. 2-3 pages.
 
 # Discussion
