@@ -102,8 +102,7 @@ plot_richness(phyloseq_obj,
                x = "current_land_use",
                measures = c("Shannon"),
               color = ("Library_Name"),
-title = ("Shannon and Simpson index for current land use")) +
-   geom_jitter(width = 0.2)
+title = ("Shannon index for current land use"))
 ```
 
 ```{r shannon-chao1-color}

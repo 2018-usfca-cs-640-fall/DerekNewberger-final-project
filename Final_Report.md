@@ -102,8 +102,7 @@ plot_richness(phyloseq_obj,
                x = "current_land_use",
                measures = c("Shannon"),
               color = ("Library_Name"),
-title = ("Shannon and Simpson index for current land use")) +
-   geom_jitter(width = 0.2)
+title = ("Shannon index for current land use"))
 ```
 
     ## Warning in estimate_richness(physeq, split = TRUE, measures = measures): The data you have provided does not have
