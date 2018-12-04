@@ -8,31 +8,25 @@ library("dplyr")
 library("tidyr")
 library("knitr")
 library("ggplot2")
-
 # This package allows for the easy inclusion of literature citations in our Rmd
 # More info here: https://github.com/crsh/citr
 # And here:
 # http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html
 library("citr")
-
 # These are the primary packages well use to clean and analyze the data
 # This package needs to be installed from bioconductor -- it's not on CRAN
 # See info here: https://benjjneb.github.io/dada2/dada-installation.html
 library("dada2")
-
 # This to export a fasta of our final denoised sequence variants
 library("seqinr")
-
 # To install this you have to install from GitHub
 # See more info here: https://github.com/leffj/mctoolsr
 # Run this -- install.packages("devtools")
 # And then this -- devtools::install_github("leffj/mctoolsr")
 library("mctoolsr")
-
 # And this to visualize our results
 # It also needs to be installed from bioconductor
 library("phyloseq")
-
 # NOTE: Much of the following follows the DADA2 tutorials available here:
 # https://benjjneb.github.io/dada2/tutorial.html
 # Accessed October 19, 2017
@@ -202,6 +196,5 @@ save(phyloseq_obj, file = "output/phyloseq_obj.Rdata")
 # Melt phyloseq object
 melted_phyloseq <- psmelt(phyloseq_obj)
 
-# Save melted phyloseq object
+# save melted phyloseq object
 save(melted_phyloseq, file = "output/melted_phyloseq.Rdata")
-
