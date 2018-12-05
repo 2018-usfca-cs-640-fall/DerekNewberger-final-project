@@ -76,8 +76,7 @@ library("phyloseq")
 load("output/phyloseq_obj.Rdata")
 # a bash script was made to download the fastq files from NCBI
 # then an R script trimmed and cleaned the data
-# the data produced from analysis scripts is saved an needs to be loaded as
-# load("output/phyloseq_obj.Rdata")
+# the data produced from analysis scripts is saved an needs to be loaded
 ```
 
 ```{r abundancies-across-the-three-types-of-land-use}
@@ -99,7 +98,7 @@ phyloseq_abundances_f <- subset_samples(phyloseq_obj, # new  phyloseq object
                                     current_land_use == "no till cropland")
 phyloseq_table <- psmelt(phyloseq_abundances_f) %>% # melted for ggplot use
 filter(Abundance < 600) # quality of reads plummetted after 550
-ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) + 
+ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) +
   # x = is why the figure has lines
   geom_col() + ggtitle("Sequence abundance of current land use") +
 xlab("Current land use")
@@ -132,7 +131,7 @@ plot_bar(phyloseq_obj, fill = "Kingdom") + # a taxomic catergorical value
   geom_bar(aes(color = Kingdom, # to fill bars with color
                fill = Kingdom), # representing respective kingdom
            stat = "identity", # linking sequences to taxa
-           position = "stack") + # values do not have separation bar 
+           position = "stack") + # values do not have separation bar
   ggtitle("Abundance of sequences per sample by Kingdom") +
   theme(legend.position = "bottom") # location of the legend
 ```
@@ -266,8 +265,8 @@ phyloseq_abundances_f <- subset_samples(phyloseq_obj, # new  phyloseq object
                                     current_land_use == "till cropland" |
                                     current_land_use == "no till cropland")
 phyloseq_table <- psmelt(phyloseq_abundances_f) %>% # melted for ggplot use
-filter(Order == "Rhizobiales", Abundance < 600) # quality of reads plummetted after 550
-ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) + 
+filter(Order == "Rhizobiales", Abundance < 600) # quality plummetted after 550
+ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) +
   # x = is why the figure has lines
   geom_col() + ggtitle("Sequence abundance of current land use") +
 xlab("Current land use")
