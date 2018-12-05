@@ -174,6 +174,17 @@ group_by(Class) %>%
                     "Frequency"))
 ```
 
+```{r family-frequency-table}
+as.data.frame(tax_table(phyloseq_obj)) %>%
+group_by(Family) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  head(24) %>% # Stop at 24 since that is when we see Rhizobiaceae
+  kable(col.names = c("Family",
+                    "Frequency"))
+```
+
+Figure 1 All four nitrogen bacteria are present
 ```{r abundance-per-sample-by-order}
 plot_bar(phyloseq_obj, fill = "Order") +
   geom_bar(aes(color = Order,
