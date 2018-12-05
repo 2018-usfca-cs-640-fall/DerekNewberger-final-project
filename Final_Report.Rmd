@@ -56,7 +56,7 @@ Several phyloseq objects were made, and plot_bar was the most common command asi
 ## Subsections are ok in the results section too
 
 ```{r explain-code-split}
-# For this analyses, the intensive computational parts were split
+# for this analyses, the intensive computational parts were split
 # into a seperate R script file named Process_data.R
 # and then was loaded along with the libraries and the data object
 # using the `load()` function.
@@ -82,24 +82,25 @@ load("output/phyloseq_obj.Rdata")
 
 ```{r abundancies-across-the-three-types-of-land-use}
 phyloseq_obj_abundancies <- subset_samples(phyloseq_obj, # a new phyloseq object
-                                  current_land_use == "grassland" |
+      current_land_use == "grassland" | # contains all three current land uses
                                     current_land_use == "till cropland" |
                                     current_land_use == "no till cropland")
 plot_bar(phyloseq_obj_abundancies, x = "current_land_use",
           title = "Sequence abundance of current land use") +
-  xlab("Current land use")
+  xlab("Current land use") #labeling the x axis, the y is not manually labeled
 ```
 
 **Figure 1**: Total abundance of sequences by current land use. The grassland has the highest abundance, follwed by no till cropland and marginally lower is till cropland. The difference between grassland and no till cropland is greater than 15000 counts.
 
 ```{r sequence-abundance-filtered}
-phyloseq_abundances_f <- subset_samples(phyloseq_obj, # new object
+phyloseq_abundances_f <- subset_samples(phyloseq_obj, # new  phyloseq object
                                     current_land_use == "grassland" |
                                     current_land_use == "till cropland" |
                                     current_land_use == "no till cropland")
-phyloseq_table <- psmelt(phyloseq_abundances_f) %>%
-filter(Abundance < 600)
-ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) +
+phyloseq_table <- psmelt(phyloseq_abundances_f) %>% # melted for ggplot use
+filter(Abundance < 600) # quality of reads plummetted after 550
+ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) + 
+  # x = is why the figure has lines
   geom_col() + ggtitle("Sequence abundance of current land use") +
 xlab("Current land use")
 ```
@@ -107,10 +108,10 @@ xlab("Current land use")
 **Figure 2**: Total abundance of sequences by current land use. There were three unidentified sequences that were above ten thousand counts while the rest ranged below 600, these were removed. Incidentally, all three were bulk soil samples of each of the three land uses and this figure gives a better understanding of the abundance of macroaggragates and microaggragates.
 
 ```{r Shannon-color}
-plot_richness(phyloseq_obj,
+plot_richness(phyloseq_obj, # richness referes to species richness
                x = "current_land_use",
-               measures = c("Shannon"),
-              color = ("Library_Name"),
+               measures = c("Shannon"), # shannon is a diversity index
+              color = ("Library_Name"), # to see land use and aggregate size
 title = ("Shannon index for current land use"))
 ```
 
@@ -119,7 +120,7 @@ title = ("Shannon index for current land use"))
 ```{r shannon-chao1-color}
 plot_richness(phyloseq_obj,
                x = "current_land_use",
-               measures = c("Shannon", "Chao1"),
+               measures = c("Shannon", "Chao1"), # chao is a diversity index
               color = "Library_Name",
               title = "Shannon and Chao 1 index for current land use")
 ```
@@ -127,13 +128,13 @@ plot_richness(phyloseq_obj,
 **Figure 4**: The Shannon and Chao index. Here, two diversity indexs are compared. It is thought that almthough the Shannon diversity is robust, the Chao index extrapolates the rare organisms that may have been missed due to undersampling.However, due to our filtering process, it is very possible that valuable singltons were removed, negatively impacting both indicies with Chao 1 being the most affected. 
 
 ```{r abundance-per-sample-by-kingdom}
-plot_bar(phyloseq_obj, fill = "Kingdom") +
-  geom_bar(aes(color = Kingdom,
-               fill = Kingdom),
-           stat = "identity",
-           position = "stack") +
+plot_bar(phyloseq_obj, fill = "Kingdom") + # a taxomic catergorical value
+  geom_bar(aes(color = Kingdom, # to fill bars with color
+               fill = Kingdom), # representing respective kingdom
+           stat = "identity", # linking sequences to taxa
+           position = "stack") + # values do not have separation bar 
   ggtitle("Abundance of sequences per sample by Kingdom") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") # location of the legend
 ```
 
 **Figure 5**: Abundance counts of sequences grouped by Kingdom within the 18 samples. This shows how far sequencing techniques have come, but that unidentified sequences are persistent for a number of reasons.Bacteria are by far the most predominate Kingdom within these samples.
@@ -141,17 +142,19 @@ plot_bar(phyloseq_obj, fill = "Kingdom") +
 **Table 1**: The frequency (different then abundance) of taxa within the Kingdom. This indicates that bacteria were much more predominate in the soil than archaea.
 ```{r kingdom-frequency-table}
 as.data.frame(tax_table(phyloseq_obj)) %>%
-group_by(Kingdom) %>%
-  tally() %>%
-  arrange(desc(n)) %>%
-  head(3) %>%
-  kable(col.names = c("Kingdom",
+  # tax table uses the sequences and organizes by the chosen column of taxa
+  # is set as a data frame
+group_by(Kingdom) %>% # taxa or column selected
+  tally() %>% # counts or sums all the taxa within a column
+  arrange(desc(n)) %>% # arrages in decs-decending n-numerical order
+  head(3) %>% # the top and only three results were selected
+  kable(col.names = c("Kingdom", # linking frequency with kindom
                     "Frequency"))
 ```
 
 
 ```{r abundance-per-sample-by-phylum}
-plot_bar(phyloseq_obj, fill = "Phylum") +
+plot_bar(phyloseq_obj, fill = "Phylum") + # phylum is the selected taxa
     geom_bar(aes(color = Phylum,
                fill = Phylum),
            stat = "identity",
@@ -169,7 +172,7 @@ as.data.frame(tax_table(phyloseq_obj)) %>%
 group_by(Phylum) %>%
   tally() %>%
   arrange(desc(n)) %>%
-  head(10) %>%
+  head(10) %>% # ten was selkected as an arbituary number
   kable(col.names = c("Phylum",
                     "Frequency"))
 ```
@@ -181,7 +184,7 @@ as.data.frame(tax_table(phyloseq_obj)) %>%
 group_by(Class) %>%
   tally() %>%
   arrange(desc(n)) %>%
-  head(10) %>%
+  head(10) %>% # ten was selected as an arbituary number
   kable(col.names = c("Class",
                     "Frequency"))
 ```
@@ -192,11 +195,11 @@ plot_bar(phyloseq_obj, fill = "Order") +
                fill = Order),
            stat = "identity",
            position = "stack") +
-  theme(legend.position = "none") +
+  theme(legend.position = "none") + # legend was large and mostly uninformative
   ggtitle("Abundance of sequences per sample by Order")
 ```
 
-**Figure 7**: Abundance counts of sequences grouped by Order within the 18 samples. This shows how far sequencing techniques have come, but that unidentified sequences are persistent for a number of reasons. Rhizobiales are by far the most predominate Order within these samples.
+**Figure 7**: Abundance counts of sequences grouped by Order within the 18 samples. This shows how far sequencing techniques have come, but that unidentified sequences are persistent for a number of reasons. Rhizobiales are by far the most predominate Order within these samples.The medium purple hue is represents Rhizobiales. For the most part they are reasonably proportionally distributed, with the exception of the bulk soil samples.
 
 **Table 4**: The frequency (different then abundance) of taxa within the Order. Here, the most frequent are the unidentified sequences, followed by Rhizobiales. Notice how the unidentified frequencies have increased drastically.
 
@@ -205,7 +208,7 @@ as.data.frame(tax_table(phyloseq_obj)) %>%
 group_by(Order) %>%
   tally() %>%
   arrange(desc(n)) %>%
-  head(10) %>%
+  head(10) %>% # ten was an arbituary number
   kable(col.names = c("Order",
                     "Frequency"))
 ```
@@ -228,11 +231,11 @@ plot_bar(phyloseq_obj, fill = "Genus") +
                fill = Genus),
            stat = "identity",
            position = "stack") +
-   theme(legend.position = "NA") + # Legend removed since it was useless
+   theme(legend.position = "NA") + # legend removed since it was distracting
   ggtitle("Abundance of sequences per sample by Genus")
 ```
 
-**Figure 8**: Abundance counts of sequences grouped by Genus within the 18 samples. This shows how far sequencing techniques have come, but that unidentified sequences are persistent for a number of reasons. *Gaiella* are by far the most predominate Genus within these samples.
+**Figure 8**: Abundance counts of sequences grouped by Genus within the 18 samples. This shows how far sequencing techniques have come, but that unidentified sequences are persistent for a number of reasons. *Gaiella* are by far the most predominate Genus within these samples. Most samples look similar with the exception of ERR340397 (no blue line), ERR340402 (low identified sequences), and ERR340398-401 (more blue). The blue line could be Massilia.
 
 **Table 6**: The frequency (different then abundance) of taxa within the Genus. Here, the most frequent are the unidentified sequences, followed by *Gaiella* and *Pseudomanas*. Notice how the unidentified frequencies have increased drastically. The table goes to 31 to *Clostridium* which is potentially a nitrogen fixer.
 
@@ -252,12 +255,25 @@ plot_bar(phyloseq_obj,
   geom_bar(aes(color = Order,
                fill = Order),
            stat = "identity",
-           position = "stack") +
-  theme(legend.position = "bottom")
+           position = "stack")
 ```
 
 **Figure 9**: The abundance of counts by current land uses filled by Order. Here we see how the Order Rhizobiales (medium purple) are very well represented in the samples. There does not appear to be a higher abundance of Rhizobiales between the three current land uses.
 
+```{r sequence-abundance-filter-order-r}
+phyloseq_abundances_f <- subset_samples(phyloseq_obj, # new  phyloseq object
+                                    current_land_use == "grassland" |
+                                    current_land_use == "till cropland" |
+                                    current_land_use == "no till cropland")
+phyloseq_table <- psmelt(phyloseq_abundances_f) %>% # melted for ggplot use
+filter(Order == "Rhizobiales", Abundance < 600) # quality of reads plummetted after 550
+ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) + 
+  # x = is why the figure has lines
+  geom_col() + ggtitle("Sequence abundance of current land use") +
+xlab("Current land use")
+```
+
+**Figure 9**: The abundance of counts by current land uses filtered by Rhizobiales. Here we see how the Order Rhizobiales represented in the three different land uses. There now appears to be a higher abundance of Rhizobiales in plots with decreased agricultural activity.
 
 # Discussion
 
