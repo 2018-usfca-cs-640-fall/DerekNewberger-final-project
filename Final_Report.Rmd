@@ -1,7 +1,7 @@
 ---
 title: "Final Report: Tilling decreaseing bacterial diversity and abundance"
 author: "Derek Newberger"
-date: "November, 26 2018"
+date: "November 26th, 2018"
 output:
     github_document: default
 bibliography: references.bib
@@ -23,28 +23,28 @@ In conclusion, we have discussed the study in question, the intent of the analys
 
 # Methods
 
-## Study design of Constancias et al. 2014
+## **Study Design of Constancias et al. 2014**
 
-### Field soil sampling:
+### Field Soil Sampling:
 
 During springtime in Burgundy, France in the agricultural landscape of Fénay, soils were sampled from three plots of soil characterized by silty clay calcisol. The agricultural practices on the grassland plot, the tilled plot, and the stubble ploughed plot, of the past eight years were monitored. Each plot had minor differences in their parameters. For sampling, a geological reference point of one meter was used and soil cores were from the surface horizon (0-20 cm) and pooled. After being sieved (2mm), the samples were air dried, and then stored at 4 C until the fraction procedure.
 
-### Soil fractionation procedure:
+### Soil Fractionation Procedure:
 
 They used a gentle physical soil fraction method (Chotte et al. 2002), to isolate the soil microenvironments by size. A subsample of 50 g of 2-mm was shaken in 250 mL of Milli-Q water for 3 h. Using the two sieves (250- and 63-μm) particles and water-stable aggregates were separated by wet sieving in approximately 3 cm of water 60 times during 2 min.  The 2,000–250- and 250–63-μm fractions were macroaggregates associated to coarse and fine sands, respectively. Stoke’s law was used to separate the microaggregates with particles of silt and loam by sedimentation and siphoning. Water was removed as clay fractions of <2 μm were recovered by centrifuging at 11,000g, 4 °C for 20 min. Samples were then freeze-dried. This procedure was carried out in replicates. Replicates were lyophilized and stored at −40 °C, and the three subsamples were used for physicochemical and microbiological analysis.
 
-### Soil physicochemical analysis
+### Soil Physicochemical Analysis
 
 The lyophilized fractions were weighed, organic carbon and total nitrogen contents of samples were characterized according to NF ISO 10694 and 13878.  Soil texture of bulk soils was determined according to NF X 31–107. Size distribution of the particles and aggregates of each fraction was verified by laser granulometry (Mastersizer 2000, Malvern Ltd). Using adhesive graphite tabs, aluminum stubs gold-palladium (12–15 nm thick), Polaron SC 7620 Mini Sputter Coater, samples were observed with a Philips XL-30ESEM LaB6 scanning electron microscope at 14 kV. 
 
 
-## Sample origin and sequencing of Constancias et al. 2014
+## Sample Origin and Sequencing of Constancias et al. 2014
 
-### Soil DNA extraction, pyrosequencing, and data analysis 
+### Soil DNA Extraction, Pyrosequencing, and Data Analysis 
 
 Using the GnsGII procedure, soil microbial DNA was extracted and purified from soil samples. Bacterial density was estimated by real-time quantitative PCR of 16S rRNA gene which were then amplified with 341F and 515R primers on 1 ng of template DNA and using the Veriti® Thermal Cycler. Using 454-pyrosequencing of the 16S rRNAV3–V4 gene region. The first PCR used primers F479 and R888, while the second used purified PCR products from the first one. Ten base-pair multiplex identifiers (MID) were added to the primers at 5′ position. Pyrosequencing was then carried out on a GS Junior And the data were processed using the GnS-PIPE of the GenoSol platform. Raw sequences were discarded if they had ambiguous base calls, length less than 350 nt, or if they contained any ambiguity (Ns). Using infernal alignments that use secondary structure of 16S rRNA gene Sequences, sequences that clustered at 95 % sequence similarity into operational taxonomic units (OTU) were identified. A filter for potential sources (chimeras, sequencing errors, OTU overestimation) of errors was applied. To compare the datasets, quality sample reads were reduced by random selection to the lowest dataset, i.e., 2,060 randomly quality-selected sequences per sample. High-quality reads were used for taxonomy-based analysis using USEARCH against reference databases from the Silva, with sequences longer than 500 nucleotides. Using UniFrac we compared the sampled bacterial communities.  UniFrac community analyses were based on a phylogenetic tree computed with FastTree using the most abundant read to represent each OTU. A weighted UniFrac distance measure was then realized to compute a dendrogram by using the PycoGent package. I found the raw data sets On NCBI with EBI database system tags using project accession number PRJEB4553.Differences between physicochemical characteristics, density, and diversity in bacterial communities were tested by ANOVA, multiple paired comparisons with P <0.05. Using the heatmap.2 function the heatmap figure was built and the gplots R package was used for the relative abundance values of the most dominant bacterial genus across the samples. The mean of each taxonomic group across sample types was calculated and colored by a corresponding Z score (constancias 2014).
 
-## Computational
+## **Computational of this Analysis with Acknowledgements**
 
 In order to retrieve this data, set I searched for an 16S amplicon dataset on NCBI. I looked for a dataset that was below one gigabyte of data and had metadata that had multiple different parameters that I could play with that was under the theme of soil microbiome in agricultural terms. I found an article by Constancias et al 2014 on the “Microscale evidence for a high decrease of soil bacteria density and diversity by cropping” which can be found at this link: https://link.springer.com/article/10.1007/s13593-013-0204-3 where the PRJEB4553 can be found. It has 18 SRA experiments. 
  I forked and cloned the repository to my github DerekNewberger-final-report from the class repository. A bash script was made to download the fastq files from NCBI. Then, a R script was made to utilize dada to filter and tether each sequence to a taxa as accurate and conservative as possible. I received help from Sanam, a student in class on which parameters to change and how the saving and loading functions worked. The sequences longer than 600 base pairs were filtered and trimmed since the quality appeared to suffer after 550 base pairs. I was recommended to keep some impure base pairs as to keep as many base pairs as possible and letting the error tools to do their job. We used build error models from each of the samples to learn of the possible error rates. Using derepfastq we removed any sequences that were duplicates which removed around half of the sequences we had remaining in the data set. Using dada and recommendations found on github for 454 data we adjusted the parameters and gave the HOMOPOLYMER_GAP_PENALTY a -1 since 454 sequencing has a difficulty dealing with this aspect of sequencing [@callahan2016]. A ‘site by species matrix’ was made, and it formed a table that instead of species, used the actual sequence as the “species” name. We then searched for and then removed chimeras using removeBimeraDenovo. Since the sequence average length was over 500 base pairs, observing chimeras would be reasonable. We built a phylogeny using the cleaned data and assigned them a taxonomy to each sequence variant based on a supplied training set of known sequences. We used the Ribosomal Database Project reference taxonomy to assign taxonomy to unknown sequences [@cole2008ribosomal; @mcmurdie2013]. 
@@ -53,7 +53,19 @@ Several phyloseq objects were made, and plot_bar was the most common command asi
 
 # Results
 
-## Subsections are ok in the results section too
+Although many results could be extrapolated from the figures shown, only those that could be used to compare or contrast the results of the original study or those that are relevant to the search for nitrogen fixation bacteria will be mentioned.
+
+# **Comparing Results**
+## Comparison of Abundance and Diversity Results
+There are multiple observations made that are similar to the original study, and with the exception of two significant observations, the two studies have similar results. As supported in the initial study, figure 5 that bulk soil samples experienced a clear decrease in abundance as cropping intensity increased. Taken in a broad sense, their Shannon diversity results match to what was found in figure 3. The diversity index in till bulk soil was slightly above one, meanwhile their Shannon diversity index was 5.38. Both reflected a much higher diversity in no-till and grassland soils. Our data does not lend a visual indication of a difference in abundance in micro or macroaggregates. As noted in figure 2, bulk soils contributed a significant amount of bacterial sequences within just three samples. Each sequence that corresponded to a different land use and had over 10000 counts of abundance with the 4th highest abundant sequence was below 600. Such a large number of similar species (sequence) would drive the evenness down. This is also seen in figure 3. The original study states that bacterial evenness decreased with the size of the fractions in grass soil, which figures (6-8) that compare abundance of sample filled by taxa could corroborate [@constancias2014microscale]. Although not apparent when separated by sample with the exception of bulk soil, abundance was systematically lower in all the microenvironments under tillage as compared to grassland and no-till crop soils (figure 1, 2, and 10).
+
+## Comparison of Taxonomy Results from different Curated Databases
+Constancias et al used the Silva database, while the current analysis used to Ribosomal Database Project for identifying taxonomy. Figure 5 shows how the dominate Kingdom was bacteria, which was the case for both studies. The original study observed that the Phyla Proteobacteria was dominate, followed by Actinobacteria. These results were observed in figure 6 and table 6. In regard to genus, the original study shown a higher Acidobacteria GP6, *Pseudomonas*, *Massilia*, *Lysobacter*, and *Bradyrhizobium* (constancias). As observed in table 6, the top five frequent Genus was *Gaiella* (n=143), *Pseudomonas* (n=77), *Povalibacter* (n=71), *Nitrospira* (n=(52), and *Massilia* (n=47). Both studies had Pseudomonas and *Massilia* as top bacteria, however, *Lysobacter* was ranked much lower (16) and neither *Bradyrhizobium* or Acidobactria GP6 was found as a genus in the study [@constancias2014microscale]. However, Acidobacteria GP6 was found in table 3 as a Class and in other articles it is classified as a class as well (tongburk). In figure 8, most samples look similar with the exception of ERR340397 (no blue line), ERR340402 (low identified sequences), and ERR340398-401 (thicker blue band). The blue line could be Massilia. In all, there were slight differences in taxonomy classification, especially looking at the Genus level. 
+
+#  ** Results Indicating the Presence of Bacteria that have the Nitrogen Fixation Ability**
+
+Along with taxonomic differences, the figures and graphs were to indicate the presence of bacteria that have the nitrogen fixation ability. The original study stated that *Rhizobium* were mainly observed in coarse and medium size fractions (>20 μm) in grassland soil since interactions with plant rhizosphere are optimum in undisturbed soils [@constancias2014microscale]. By looking deeper into this, figure 7 and table 4 showed how the Order Rhizobiales were the most abundant. Although there is a large amount of frequencies that are unidentified, Rhizobiales are much more predominant. With the exception of the bulk soil samples (ERR34090-grassland, ERR340396-no-till, ERR340402-till), it appears that the medium purple band is fairly evenly distributed in each sample. In regard to bulk soil, it appears that as crop intensity increase, bacteria within the taxonomic classification of Rhizobiales decrease. Table 5 shows all four families that are under Rhizobiales, although in general, their frequency is not relatively high (Bradyrhizobiaceae n=45, Hyphomicrobiaceae n=69, Rhizobiaceae n=26, and Phyllobacteriaceae n=45). Not much detail could be extrapolated from graphs that focus on the genus in general, so focus was redirected to the Order classification. In figure 9, the medium purple band was more distinct within the three land use plots. However, due to the noise from the other sequences, a clear conclusion was difficult. In figure 10 it apparent that grassland had a higher abundance of Rhizobiales and decreased as cropping intensity increased. The difference of abundance is most distinct in this figure.
+
 
 ```{r explain-code-split}
 # for this analyses, the intensive computational parts were split
@@ -176,14 +188,14 @@ group_by(Phylum) %>%
                     "Frequency"))
 ```
 
-**Table 3**: The frequency (different then abundance) of taxa within the Class. Here, the most frequent is alphaproteobacteria, followed by Actinobacteria. Notice how the unidentified frequencies have increased.
+**Table 3**: The frequency (different then abundance) of taxa within the Class. Here, the most frequent is alphaproteobacteria, followed by Actinobacteria. Notice how the unidentified frequencies have increased.Also, notive how Acidiobacteria GP6 is listed here as a class.
 
 ```{r class-frequency-table}
 as.data.frame(tax_table(phyloseq_obj)) %>%
 group_by(Class) %>%
   tally() %>%
   arrange(desc(n)) %>%
-  head(10) %>% # ten was selected as an arbituary number
+  head(10) %>% # ten was selected as to show Acidobacteria_Gp6
   kable(col.names = c("Class",
                     "Frequency"))
 ```
@@ -243,7 +255,7 @@ as.data.frame(tax_table(phyloseq_obj)) %>%
   group_by(Genus) %>%
   tally() %>%
   arrange(desc(n)) %>%
-  head(31) %>%
+  head(31) %>% # goes to 31 in order to see Clostridium
   kable(col.names = c("Genus", "Frequency"))
 ```
 
@@ -254,7 +266,9 @@ plot_bar(phyloseq_obj,
   geom_bar(aes(color = Order,
                fill = Order),
            stat = "identity",
-           position = "stack")
+           position = "stack") +
+  xlab("Current Land Use") +
+   ggtitle("Abundance of sequences by current land use by Order")
 ```
 
 **Figure 9**: The abundance of counts by current land uses filled by Order. Here we see how the Order Rhizobiales (medium purple) are very well represented in the samples. There does not appear to be a higher abundance of Rhizobiales between the three current land uses.
@@ -265,14 +279,14 @@ phyloseq_abundances_f <- subset_samples(phyloseq_obj, # new  phyloseq object
                                     current_land_use == "till cropland" |
                                     current_land_use == "no till cropland")
 phyloseq_table <- psmelt(phyloseq_abundances_f) %>% # melted for ggplot use
-filter(Order == "Rhizobiales", Abundance < 600) # quality plummetted after 550
+filter(Order == "Rhizobiales") # quality plummetted after 550
 ggplot(phyloseq_table, aes(x = current_land_use, y = Abundance)) +
   # x = is why the figure has lines
-  geom_col() + ggtitle("Sequence abundance of current land use") +
+geom_col() + ggtitle("Sequence abundance of Rhizobiales by current land use ") +
 xlab("Current land use")
 ```
 
-**Figure 9**: The abundance of counts by current land uses filtered by Rhizobiales. Here we see how the Order Rhizobiales represented in the three different land uses. There now appears to be a higher abundance of Rhizobiales in plots with decreased agricultural activity.
+**Figure 10**: The abundance of counts by current land uses filtered by Rhizobiales. Here we see how the Order Rhizobiales represented in the three different land uses. There now appears to be a higher abundance of Rhizobiales in plots with decreased agricultural activity.
 
 # Discussion
 
