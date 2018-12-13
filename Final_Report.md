@@ -406,6 +406,7 @@ plot_bar(phyloseq_obj,
                fill = Order),
            stat = "identity",
            position = "stack") +
+theme(legend.position = "NA") + # legend removed since it was distracting
   xlab("Current Land Use") +
    ggtitle("Abundance of sequences by current land use by Order")
 ```
